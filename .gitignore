@@ -25,6 +25,7 @@ data/
 .DS_Store
 .next/
 *.joblib
+!backend/models/*.joblib
 cad.json
 .gemini/
 
