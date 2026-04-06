@@ -9,4 +9,8 @@ services:
       - key: PORT
         value: 8000
       - key: NASA_API_KEY
-        value: DEMO_KEY
+        sync: false
+      - key: ALPHA_VANTAGE_API_KEY
+        sync: false
+      - key: GOLD_API_KEY
+        sync: false
