@@ -6,9 +6,13 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 NASA_API_KEY = os.getenv("NASA_API_KEY", "DEMO_KEY")
+ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
+GOLD_API_KEY = os.getenv("GOLD_API_KEY")
 
 CNEOS_API_URL = "https://ssd-api.jpl.nasa.gov/cad.api"
 SBDB_API_URL = "https://ssd-api.jpl.nasa.gov/sbdb.api"
+ALPHA_VANTAGE_API_URL = "https://www.alphavantage.co/query"
+GOLD_API_URL = "https://www.goldapi.io/api/XAU/USD"
 
 def fetch_neo_close_approaches(date_min="2026-04-01", date_max="2026-04-30", dist_max="0.05"):
     """
@@ -43,6 +47,43 @@ def fetch_asteroid_physical_data(des):
         return response.json()
     return None
 
+def fetch_alpha_vantage_symbol(symbol: str):
+    """
+    Fetch global quote data for a specific symbol using Alpha Vantage.
+    """
+    if not ALPHA_VANTAGE_API_KEY:
+        print("Alpha Vantage API Key not found.")
+        return None
+        
+    params = {
+        "function": "GLOBAL_QUOTE",
+        "symbol": symbol,
+        "apikey": ALPHA_VANTAGE_API_KEY
+    }
+    
+    response = requests.get(ALPHA_VANTAGE_API_URL, params=params)
+    if response.status_code == 200:
+        return response.json()
+    return None
+
+def fetch_gold_price():
+    """
+    Fetch current gold price (XAU/USD) using GoldAPI.
+    """
+    if not GOLD_API_KEY:
+        print("GoldAPI Key not found.")
+        return None
+        
+    headers = {
+        "x-access-token": GOLD_API_KEY,
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.get(GOLD_API_URL, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    return None
+
 if __name__ == "__main__":
     print("Testing data acquisition from NASA CNEOS...")
     df_cad = fetch_neo_close_approaches(date_min="2026-04-01", date_max="2026-04-07")
@@ -67,3 +108,22 @@ if __name__ == "__main__":
             print("No physical parameters found or request failed.")
     else:
         print("No data found or request failed.")
+
+    print("\n--- Testing Economics Data Acquisition ---")
+    
+    # Test GoldAPI
+    print("Fetching current Gold price (XAU/USD)...")
+    gold_data = fetch_gold_price()
+    if gold_data:
+        print(f"Successfully retrieved Gold data: {gold_data.get('price', 'N/A')} USD/oz")
+    else:
+        print("Failed to retrieve Gold data.")
+        
+    # Test Alpha Vantage (e.g. Platinum ETF as proxy)
+    print("\nFetching market data for Platinum ETF (PPLT)...")
+    av_data = fetch_alpha_vantage_symbol("PPLT")
+    if av_data and "Global Quote" in av_data:
+        print("Successfully retrieved Alpha Vantage data.")
+        print(av_data["Global Quote"])
+    else:
+        print("Failed to retrieve Alpha Vantage data.")

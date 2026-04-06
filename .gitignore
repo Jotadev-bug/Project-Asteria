@@ -23,6 +23,9 @@ data/
 .idea/
 *.swp
 .DS_Store
+.next/
+*.joblib
+cad.json
 .gemini/
 
 # Documentation
