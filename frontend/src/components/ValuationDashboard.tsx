@@ -24,8 +24,9 @@ export default function ValuationDashboard({ selectedAsteroid, onClose }: Props)
     try {
       const res = await predictValuation(targetToPredict);
       setData(res);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      alert(`API Error: ${e.message || "Failed to connect to backend"}`);
     } finally {
       setLoading(false);
     }

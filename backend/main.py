@@ -47,6 +47,10 @@ app.add_middleware(
 # Root API router
 app.include_router(api_router, prefix="/api")
 
+@app.get("/")
+async def root():
+    return {"message": "Project Asteria Backend API is running. Visit /docs for documentation or use the Vercel Frontend for the UI."}
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "service": "Project Asteria"}
