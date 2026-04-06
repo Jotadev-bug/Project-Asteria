@@ -30,9 +30,15 @@ app = FastAPI(
 )
 
 # CORS configuration
+frontend_url = os.getenv("FRONTEND_URL")
+origins = [frontend_url] if frontend_url else ["*"]
+# Allow localhost for local development
+if "http://localhost:3000" not in origins and frontend_url:
+    origins.append("http://localhost:3000")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Restrict to specific frontend domain in production
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

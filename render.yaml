@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: asteria-backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    region: ohio
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: NASA_API_KEY
+        value: DEMO_KEY
