@@ -6,8 +6,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code and models
+# Copy application code, models, and ml_pipeline
 COPY backend/ ./backend/
+COPY ml_pipeline/ ./ml_pipeline/
 
 # Set env vars
 ENV PYTHONPATH=/app
